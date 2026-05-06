@@ -11,7 +11,7 @@
 
 ## 在线体验
 
-[https://mbti-3l3.pages.dev](https://mbti-3l3.pages.dev)
+[https://mbti.daum.pw](https://mbti.daum.pw)
 
 ## 技术栈
 
