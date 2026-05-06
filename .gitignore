@@ -1,0 +1,17 @@
+# Deployment artifacts
+cf-dist/
+.wrangler/
+.vercel/
+
+# IDE
+.vscode/
+
+# Node.js (if any)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Backups
+*.bak

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>MBTI 性格测试</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg-layer" aria-hidden="true"></div>
+  <div class="bg-blobs" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Theme Toggle -->
+  <button class="theme-toggle" onclick="toggleTheme()" aria-label="切换主题">
+    <svg class="icon-sun" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    <svg class="icon-moon" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  </button>
+
+  <div id="app-container">
+
+    <!-- ── Welcome Page ── -->
+    <div id="page-welcome" class="page active">
+      <div class="welcome">
+        <div class="welcome-icon fade-up">MBTI</div>
+        <h1 class="welcome-title fade-up d1">MBTI 性格测试</h1>
+        <p class="welcome-sub fade-up d2">开源 · 无广告 · 纯前端</p>
+
+        <div class="info-card fade-up d3">
+          <div class="section-title">关于本测试</div>
+          <ul class="feature-list">
+            <li>
+              <span class="fi">01</span>
+              <div><div class="ft">OEJTS 32 题版</div><div class="fd">基于科学开源量表</div></div>
+            </li>
+            <li>
+              <span class="fi">02</span>
+              <div><div class="ft">约 5 分钟</div><div class="fd">单题模式，轻松作答</div></div>
+            </li>
+            <li>
+              <span class="fi">03</span>
+              <div><div class="ft">隐私安全</div><div class="fd">数据仅存本地，零追踪</div></div>
+            </li>
+          </ul>
+        </div>
+
+        <button class="btn-start fade-up d4" onclick="startTest()">
+          开始测试
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
+
+        <div class="footer fade-up d5">
+          <p>题目来源：Open Extended Jungian Type Scale (OEJTS)</p>
+          <p>授权协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Quiz Page ── -->
+    <div id="page-quiz" class="page">
+      <div class="quiz-page">
+        <div class="quiz-header">
+          <div class="progress-ring" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+            <svg viewBox="0 0 44 44">
+              <circle class="track" cx="22" cy="22" r="19"/>
+              <circle class="fill" id="progress-fill" cx="22" cy="22" r="19"/>
+            </svg>
+            <span class="progress-text" id="progress-text">0%</span>
+          </div>
+          <div class="dim-badge" id="dim-badge"></div>
+        </div>
+
+        <div class="question-area" id="question-area">
+          <div class="question-content" id="question-content"></div>
+        </div>
+
+        <div class="quiz-nav">
+          <button class="btn-nav btn-back" id="btn-prev" onclick="prevQuestion()" style="display:none;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            上一题
+          </button>
+          <button class="btn-nav btn-next" id="btn-next" onclick="nextQuestion()" disabled>
+            下一题
+            <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+
+        <div class="swipe-hint">
+          <span class="swipe-hint-arrow">&larr;</span>
+          <span>左右滑动切换</span>
+          <span class="swipe-hint-arrow">&rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Result Page ── -->
+    <div id="page-result" class="page">
+      <div class="result-page">
+        <div class="scroll-area">
+
+          <div class="poster-card fade-up">
+            <div class="poster-bg"></div>
+            <div class="poster-content">
+              <div class="poster-label">YOUR PERSONALITY TYPE</div>
+              <div class="poster-type" id="result-type"></div>
+              <div class="poster-name" id="result-type-name"></div>
+              <div class="poster-dims" id="poster-dims"></div>
+            </div>
+          </div>
+
+          <div class="traits-section fade-up d1" id="traits-section">
+            <div class="tag-list" id="trait-tags"></div>
+          </div>
+
+          <div class="glass-card dim-card fade-up d2">
+            <div class="section-title">维度分析</div>
+            <div id="dimension-bars"></div>
+          </div>
+
+          <div class="tabs fade-up d3">
+            <button class="tab-btn active" data-tab="strengths" onclick="switchTab('strengths')">你的优势</button>
+            <button class="tab-btn" data-tab="growth" onclick="switchTab('growth')">成长建议</button>
+            <button class="tab-btn" data-tab="compatible" onclick="switchTab('compatible')">最佳拍档</button>
+          </div>
+
+          <div class="tab-content fade-up d3" id="tab-content"></div>
+
+          <div class="glass-card interp-card fade-up d4">
+            <div class="section-title">你是谁</div>
+            <p class="interp-text" id="result-description"></p>
+          </div>
+
+          <div class="actions fade-up d5">
+            <button class="btn-share" onclick="copyShareLink()">
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>
+              复制分享链接
+            </button>
+            <button class="btn-restart" onclick="resetTest()">再测一次</button>
+          </div>
+
+          <div class="footer">
+            <p>题目来源：Open Extended Jungian Type Scale (OEJTS)</p>
+            <p>授权协议：<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">CC BY-NC-SA 4.0</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box">
+      <h3 id="modal-title">提示</h3>
+      <p id="modal-msg"></p>
+      <div class="modal-buttons">
+        <button class="modal-btn-cancel" id="modal-cancel" onclick="handleModalCancel()" style="display:none;">取消</button>
+        <button class="modal-btn-confirm" onclick="handleModalOk()">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+  /* ══════════════════════════════════════
+     Data
+     ══════════════════════════════════════ */
+
+  const QUESTIONS = [
+    {id:1,dimension:"EI",direction:"positive",left:"在聚会上，我通常主动和很多人打招呼",right:"我更喜欢找一两个熟人静静聊天",left_label:"E",right_label:"I"},
+    {id:2,dimension:"EI",direction:"reverse",left:"面对陌生人群，我倾向于保持沉默观察",right:"我很容易自然地加入谈话",left_label:"I",right_label:"E"},
+    {id:3,dimension:"EI",direction:"positive",left:"我喜欢成为大家注意的中心",right:"我更愿意在角落里做个旁观者",left_label:"E",right_label:"I"},
+    {id:4,dimension:"EI",direction:"reverse",left:"独处时我更能充电放松",right:"和朋友们在一起让我感到活力充沛",left_label:"I",right_label:"E"},
+    {id:5,dimension:"EI",direction:"positive",left:"我倾向于外向开朗，容易接近",right:"我比较内敛，有自己的私人空间",left_label:"E",right_label:"I"},
+    {id:6,dimension:"EI",direction:"reverse",left:"我在社交场合常常感到拘谨不自在",right:"我在各种场合都能轻松自如地表现自己",left_label:"I",right_label:"E"},
+    {id:7,dimension:"EI",direction:"positive",left:"我乐意主动认识新朋友",right:"我更喜欢和熟悉的老朋友相处",left_label:"E",right_label:"I"},
+    {id:8,dimension:"EI",direction:"reverse",left:"我通常等别人先开口找我",right:"我经常主动开启话题",left_label:"I",right_label:"E"},
+    {id:9,dimension:"SN",direction:"positive",left:"我更关注眼前的具体细节",right:"我更倾向于看到整体的可能性",left_label:"S",right_label:"N"},
+    {id:10,dimension:"SN",direction:"reverse",left:"我喜欢畅想未来的各种可能",right:"我更注重当下的实际经验",left_label:"N",right_label:"S"},
+    {id:11,dimension:"SN",direction:"positive",left:"我信任经过验证的可靠方法",right:"我喜欢探索新颖独特的解决方案",left_label:"S",right_label:"N"},
+    {id:12,dimension:"SN",direction:"reverse",left:"我常被自己的想法和联想带走",right:"我倾向于脚踏实地处理眼前事务",left_label:"N",right_label:"S"},
+    {id:13,dimension:"SN",direction:"positive",left:"我重视实际经验和确凿事实",right:"我对理论和抽象概念更感兴趣",left_label:"S",right_label:"N"},
+    {id:14,dimension:"SN",direction:"reverse",left:"我更关注事物背后的意义和关联",right:"我专注于事情本身的具体情况",left_label:"N",right_label:"S"},
+    {id:15,dimension:"SN",direction:"positive",left:"我做事讲究务实和可行性",right:"我更看重创意和灵感",left_label:"S",right_label:"N"},
+    {id:16,dimension:"SN",direction:"reverse",left:"我的思维跳跃，喜欢联想",right:"我观察敏锐，注重细节",left_label:"N",right_label:"S"},
+    {id:17,dimension:"FT",direction:"positive",left:"做决定时，我更看重人际和谐",right:"做决定时，我更注重逻辑和公正",left_label:"F",right_label:"T"},
+    {id:18,dimension:"FT",direction:"reverse",left:"我认为客观真理比个人感受更重要",right:"我会优先考虑他人的情感和处境",left_label:"T",right_label:"F"},
+    {id:19,dimension:"FT",direction:"positive",left:"我富有同情心，容易感同身受",right:"我倾向于理性分析，保持客观",left_label:"F",right_label:"T"},
+    {id:20,dimension:"FT",direction:"reverse",left:"我习惯用批判性思维审视问题",right:"我倾向于理解和包容不同的观点",left_label:"T",right_label:"F"},
+    {id:21,dimension:"FT",direction:"positive",left:"我重视合作与相互支持",right:"我重视效率和目标达成",left_label:"F",right_label:"T"},
+    {id:22,dimension:"FT",direction:"reverse",left:"我觉得辩论和争论很有价值",right:"我倾向于避免冲突，维护和睦",left_label:"T",right_label:"F"},
+    {id:23,dimension:"FT",direction:"positive",left:"我依据个人价值观和良心行事",right:"我依据理性分析和事实依据行事",left_label:"F",right_label:"T"},
+    {id:24,dimension:"FT",direction:"reverse",left:"我做决定时尽量不受情绪干扰",right:"我会考虑决定对他人的情感影响",left_label:"T",right_label:"F"},
+    {id:25,dimension:"JP",direction:"positive",left:"我喜欢提前制定计划并按部就班",right:"我更喜欢随机应变，灵活处理",left_label:"J",right_label:"P"},
+    {id:26,dimension:"JP",direction:"reverse",left:"我喜欢保持开放的选择空间",right:"我喜欢把事情确定下来，有条有理",left_label:"P",right_label:"J"},
+    {id:27,dimension:"JP",direction:"positive",left:"我倾向于尽快完成任务",right:"我倾向于在截止日期前才动手",left_label:"J",right_label:"P"},
+    {id:28,dimension:"JP",direction:"reverse",left:"我适应性强，不喜欢被条条框框束缚",right:"我重视结构和清晰的安排",left_label:"P",right_label:"J"},
+    {id:29,dimension:"JP",direction:"positive",left:"我习惯列清单、做日程表",right:"我习惯走一步看一步",left_label:"J",right_label:"P"},
+    {id:30,dimension:"JP",direction:"reverse",left:"我对时间比较宽松随性",right:"我很守时，讨厌拖延",left_label:"P",right_label:"J"},
+    {id:31,dimension:"JP",direction:"positive",left:"我喜欢事情有明确的结论",right:"我喜欢保留探索的余地",left_label:"J",right_label:"P"},
+    {id:32,dimension:"JP",direction:"reverse",left:"我享受过程中的惊喜和变化",right:"我享受完成目标后的满足感",left_label:"P",right_label:"J"}
+  ];
+
+  const DIMENSION_LABELS = {
+    EI: {left:"E",right:"I",name:"能量来源",leftDesc:"外向 Extraversion",rightDesc:"内向 Introversion"},
+    SN: {left:"S",right:"N",name:"认知方式",leftDesc:"实感 Sensing",rightDesc:"直觉 Intuition"},
+    FT: {left:"F",right:"T",name:"决策风格",leftDesc:"情感 Feeling",rightDesc:"思考 Thinking"},
+    JP: {left:"J",right:"P",name:"生活态度",leftDesc:"判断 Judging",rightDesc:"知觉 Perceiving"}
+  };
+
+  const TYPE_NAMES = {
+    ISTJ:"检查者",ISFJ:"保护者",INFJ:"提倡者",INTJ:"建筑师",
+    ISTP:"鉴赏家",ISFP:"探险家",INFP:"调停者",INTP:"逻辑学家",
+    ESTP:"企业家",ESFP:"表演者",ENFP:"竞选者",ENTP:"辩论家",
+    ESTJ:"总经理",ESFJ:"执政官",ENFJ:"主人公",ENTJ:"指挥官"
+  };
+
+  const TYPE_DESCRIPTIONS = {
+    ISTJ:"你是那种会把生活打理得井井有条的人。靠谱是你的代名词，答应的事绝不掉链子。你不喜欢意外，稳定可控让你安心。",
+    ISFJ:"你温柔得像一杯温热的茶，不张扬却总能在细节上照顾到每个人。传统和责任感是你的底色，朋友们都知道你是值得托付的人。",
+    INFJ:"你的安静里藏着一片海。你对人性有敏锐的直觉，总在思考更深层的意义。你相信真诚和理解，胜过千言万语。",
+    INTJ:"理性是你的武器，规划是你的本能。你习惯在脑子里搭建完整的蓝图，然后一步步执行。孤独对你不是惩罚，是充电。",
+    ISTP:"你像一把瑞士军刀，冷静、实用、关键时刻从不掉链子。你喜欢动手解决问题，讨厌废话，行动比承诺更有分量。",
+    ISFP:"你有一颗敏感而自由的心。美和体验对你很重要，你不喜欢被定义，更愿意用自己的节奏感受世界。温柔但有棱角。",
+    INFP:"你心里住着一个理想主义者。你善于倾听，总能看到人性柔软的一面。创作和表达是你和世界对话的方式。",
+    INTP:"你的好奇心永无止境，\"为什么\"是你最常问的问题。逻辑和系统让你兴奋，社交规则反而让你疲惫。你是天生的思考者。",
+    ESTP:"你是活在当下的冒险家。新鲜、刺激、变化让你热血沸腾。你反应快、适应力强，生活对你来说永远充满可能性。",
+    ESFP:"你是人群中的聚光灯。热情、幽默、感染力爆棚，你走到哪里，笑声就跟到哪里。享受此刻是你的人生哲学。",
+    ENFP:"你的热情像夏天的风，吹到哪里都带来活力。你善于发现每个人的闪光点，脑子里永远装满了新奇点子。",
+    ENTP:"你是天生的辩论家和创新者。思维跳跃、视角独特，你喜欢挑战常规。无聊是你最大的敌人，新鲜刺激是你的燃料。",
+    ESTJ:"你是天生的管理者，效率和组织能力刻在你的DNA里。目标清晰、执行力强，你是团队里让人安心的定海神针。",
+    ESFJ:"你是社交场上的粘合剂。热心、体贴、情商高，你总能照顾到每个人的情绪。和谐的人际关系是你最大的成就感来源。",
+    ENFJ:"你有一种让人愿意追随的魅力。善于鼓舞、乐于引导，你真心希望身边的人都能变得更好。你的热情能点燃整个团队。",
+    ENTJ:"你是战略家，也是领导者。果断、自信、结果导向，你善于统筹全局。你对自己要求高，对身边的人也同样期待卓越。"
+  };
+
+  const TYPE_TRAITS = {
+    ISTJ:["责任心强","注重细节","遵守规则","忠诚可靠","有条不紊"],
+    ISFJ:["温暖体贴","细心周到","忠诚专一","谦虚务实","乐于助人"],
+    INFJ:["洞察力强","理想主义","有同理心","善于规划","追求意义"],
+    INTJ:["战略思维","独立自主","高标准","逻辑严密","远见卓识"],
+    ISTP:["冷静理性","动手能力强","灵活应变","观察敏锐","独立自主"],
+    ISFP:["温柔敏感","审美出众","活在当下","忠于自我","和平主义者"],
+    INFP:["理想主义","富有创意","善解人意","内心丰富","追求真实"],
+    INTP:["逻辑清晰","求知欲强","独立思考","善于分析","创新思维"],
+    ESTP:["精力充沛","适应力强","务实果断","社交达人","行动派"],
+    ESFP:["热情开朗","幽默风趣","感染力强","乐天派","善于社交"],
+    ENFP:["热情洋溢","创意无限","善于激励","好奇心强","人缘极好"],
+    ENTP:["思维敏捷","善于辩论","创新能力强","灵活多变","挑战者"],
+    ESTJ:["组织力强","执行力高","目标明确","公正严明","领导风范"],
+    ESFJ:["热心助人","忠诚可靠","善解人意","重视和谐","有责任感"],
+    ENFJ:["魅力出众","善于引导","有同理心","热情洋溢","天生领袖"],
+    ENTJ:["果断自信","战略眼光","高效率","意志坚定","追求卓越"]
+  };
+
+  const TYPE_STRENGTHS = {
+    ISTJ:"你最大的优势是执行力和可靠性。交给你的事，别人可以完全放心。你对细节的把控和对承诺的坚守，让你成为任何团队中不可或缺的基石。",
+    ISFJ:"你的力量来自对他人的关怀和对细节的敏感。你总能在别人还没开口时就察觉到需求，这种无声的支持是最珍贵的礼物。",
+    INFJ:"你拥有罕见的洞察力和同理心。你能看透表象理解人心，又能将愿景转化为行动。你的存在本身就让人感到被理解。",
+    INTJ:"你的战略思维和执行力是你的王牌。你能看到别人看不到的全局，然后毫不犹豫地付诸实践。你是问题的终结者。",
+    ISTP:"你的冷静和动手能力让你在危机时刻成为关键人物。你不慌不忙地拆解问题、找到解决方案，这种镇定自若令人敬佩。",
+    ISFP:"你的真诚和审美是你最迷人的地方。你用行动而非言语表达爱，用感受而非逻辑理解世界，你让生活变得更美好。",
+    INFP:"你的理想主义和创造力是你的超能力。你能看到世界的可能性，用文字和行动激励他人，你让身边的人相信美好是真实的。",
+    INTP:"你思维的深度和广度无人能及。你能在混沌中找到规律，在复杂中看到本质。你的思考方式是解决难题的利器。",
+    ESTP:"你的行动力和应变能力是你最大的武器。当别人还在分析时，你已经在做了。你的务实精神和冒险勇气让你抓住别人错失的机会。",
+    ESFP:"你的感染力和生命力是你的天赋。你能让任何场合变得有趣，能让紧绷的人放松下来。你教会身边的人享受当下。",
+    ENFP:"你的热情和创造力能点燃任何人。你善于发现别人身上的潜力，你的鼓励和支持能让人突破自我限制，做更好的自己。",
+    ENTP:"你的思维速度和创新能力是你的秘密武器。你能从任何角度找到新解法，你的挑战精神推动世界向前。",
+    ESTJ:"你的组织力和领导力让你成为天生的管理者。你把混乱变成秩序，把目标变成现实。你的存在让团队高效运转。",
+    ESFJ:"你的温暖和责任感让你成为人际关系的守护者。你创造的和谐氛围是家人和朋友最需要的安全港。",
+    ENFJ:"你天生就有鼓舞人心的能力。你能看到每个人的最佳版本，并帮助他们成为那个人。你让世界变得更温暖。",
+    ENTJ:"你的远见和执行力是罕见的组合。你不仅能制定宏伟的蓝图，还能一步步把它变成现实。你是推动变革的引擎。"
+  };
+
+  const TYPE_GROWTH = {
+    ISTJ:"试着偶尔打破常规，给自己一些意外的惊喜。学会接受\"不完美\"也是一种智慧，不是所有事情都需要在掌控之中。",
+    ISFJ:"记得照顾好自己，你的善良不需要用牺牲来证明。试着表达自己的需求，学会说\"不\"也是一种力量。",
+    INFJ:"不要对自己太苛刻，你不需要理解一切。给自己留出独处的时间，但也别忘了偶尔打开门，让别人走进你的世界。",
+    INTJ:"试着倾听不同的声音，有时候效率不是唯一的目标。学会欣赏过程中的人情味，关系的价值不能只用逻辑衡量。",
+    ISTP:"试着更主动地表达情感，行动很好，但言语有时也需要跟上。偶尔停下来想想长远规划，不只是眼前的挑战。",
+    ISFP:"试着更自信地表达自己的想法，你的观点比你以为的更有价值。不要害怕冲突，有时候坚持自我才是真正的温柔。",
+    INFP:"试着把理想落实到行动上，小步骤也是进步。不要因为现实的粗糙就退缩，你的理想世界需要你亲手去建造。",
+    INTP:"试着把你的想法分享给更多人，独到的见解值得被听到。不要过度分析情感，有时候感受比逻辑更接近真相。",
+    ESTP:"试着慢下来想想未来，当下的刺激虽然美好，但长远规划能让你走得更远。学会倾听比表达更重要的时刻。",
+    ESFP:"试着培养一些长期的专注力，深度和广度同样重要。偶尔独处一下，你会发现在安静中也能找到乐趣。",
+    ENFP:"试着完成已经开始的事，你的想法很多，但落地才是关键。学会在热情消退后依然坚持，这才是真正的力量。",
+    ENTP:"试着在辩论中多一些同理心，赢不是唯一的目的。学会在适当的时候闭嘴倾听，有时候理解比反驳更有价值。",
+    ESTJ:"试着放慢脚步，不是所有人都能跟上你的节奏。学会欣赏不同的工作方式，柔性和刚性同样重要。",
+    ESFJ:"试着不要过度在意别人的评价，你的价值不需要所有人的认可。学会把一些精力放在自己身上，自我关爱不是自私。",
+    ENFJ:"试着接受你无法改变所有人，每个人都有自己的路要走。学会设立健康的边界，帮助别人不应该以消耗自己为代价。",
+    ENTJ:"试着多关注身边人的感受，效率很重要，但人心同样重要。学会在领导中展现脆弱，完美不是唯一的领导力。"
+  };
+
+  const TYPE_COMPATIBLE = {
+    ISTJ:["ESFP","ESTP"],ISFJ:["ESFP","ESTP"],INFJ:["ENFP","ENTP"],INTJ:["ENFP","ENTP"],
+    ISTP:["ESFJ","ESTJ"],ISFP:["ESFJ","ESTJ"],INFP:["ENFJ","ENTJ"],INTP:["ENFJ","ENTJ"],
+    ESTP:["ISFJ","ISTJ"],ESFP:["ISFJ","ISTJ"],ENFP:["INFJ","INTJ"],ENTP:["INFJ","INTJ"],
+    ESTJ:["ISFP","ISTP"],ESFJ:["ISFP","ISTP"],ENFJ:["INFP","INTP"],ENTJ:["INFP","INTP"]
+  };
+
+  /* ══════════════════════════════════════
+     State
+     ══════════════════════════════════════ */
+
+  const STORAGE_KEY = 'mbti_answers';
+  const CIRCUMFERENCE = 2 * Math.PI * 19;
+
+  let state = { answers: {}, currentQ: 0 };
+  let isTransitioning = false;
+  let currentResultType = '';
+  let currentResultScores = {};
+  let activeTab = 'strengths';
+
+  // Swipe state
+  let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+  let isHorizontal = null, swipeOffset = 0, isSwiping = false;
+
+  /* ══════════════════════════════════════
+     Theme
+     ══════════════════════════════════════ */
+
+  function setTheme(name) {
+    document.documentElement.setAttribute('data-theme', name);
+    localStorage.setItem('mbti_theme', name);
+  }
+
+  function toggleTheme() {
+    const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+  }
+
+  setTheme(localStorage.getItem('mbti_theme') || 'dark');
+
+  /* ══════════════════════════════════════
+     Modal & Toast
+     ══════════════════════════════════════ */
+
+  let modalCallback = null;
+  let modalCancelCallback = null;
+
+  function showModal(msg, title) {
+    modalCallback = null;
+    modalCancelCallback = null;
+    document.getElementById('modal-title').textContent = title || '提示';
+    document.getElementById('modal-msg').textContent = msg;
+    document.getElementById('modal-cancel').style.display = 'none';
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function showConfirm(msg, onOk, onCancel) {
+    modalCallback = onOk || null;
+    modalCancelCallback = onCancel || null;
+    document.getElementById('modal-title').textContent = '确认';
+    document.getElementById('modal-msg').textContent = msg;
+    document.getElementById('modal-cancel').style.display = '';
+    document.getElementById('modal').classList.add('show');
+  }
+
+  function handleModalOk() {
+    document.getElementById('modal').classList.remove('show');
+    if (modalCallback) modalCallback();
+  }
+
+  function handleModalCancel() {
+    document.getElementById('modal').classList.remove('show');
+    if (modalCancelCallback) modalCancelCallback();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  /* ══════════════════════════════════════
+     Page Navigation
+     ══════════════════════════════════════ */
+
+  function showPage(id) {
+    const current = document.querySelector('.page.active');
+    const target = document.getElementById(id);
+
+    function activatePage() {
+      target.classList.add('active');
+      window.scrollTo(0, 0);
+      // Replay fade-up animations
+      target.querySelectorAll('.fade-up').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetWidth; // trigger reflow
+        el.style.animation = '';
+      });
+    }
+
+    if (current && current !== target) {
+      current.classList.add('page-exit');
+      setTimeout(() => {
+        current.classList.remove('active', 'page-exit');
+        activatePage();
+      }, 250);
+    } else {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active', 'page-exit'));
+      activatePage();
+    }
+  }
+
+  /* ══════════════════════════════════════
+     State Persistence
+     ══════════════════════════════════════ */
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        state.answers = parsed.answers || {};
+        state.currentQ = parsed.currentQ ?? 0;
+      }
+    } catch (e) {
+      state = { answers: {}, currentQ: 0 };
+    }
+  }
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+      answers: { ...state.answers },
+      currentQ: state.currentQ
+    }));
+  }
+
+  /* ══════════════════════════════════════
+     Scoring (matches Vue version exactly)
+     ══════════════════════════════════════ */
+
+  function calculateScores(answers) {
+    const scores = { E:0, I:0, S:0, N:0, F:0, T:0, J:0, P:0 };
+    const counts = { EI:0, SN:0, FT:0, JP:0 };
+
+    for (const q of QUESTIONS) {
+      const val = answers[q.id];
+      if (val == null || !Number.isFinite(val) || val < 1 || val > 5) continue;
+      counts[q.dimension]++;
+      scores[q.left_label] += (6 - val);
+      scores[q.right_label] += val;
+    }
+
+    const result = {};
+    for (const dim of ['EI','SN','FT','JP']) {
+      const count = counts[dim];
+      const lbl = DIMENSION_LABELS[dim];
+      const leftScore = scores[lbl.left];
+      const leftPct = count > 0 ? Math.round((leftScore - count) / (count * 4) * 100) : 50;
+      const clamped = Math.max(0, Math.min(100, leftPct));
+      result[dim] = { left: clamped, right: 100 - clamped };
+    }
+    return result;
+  }
+
+  function getType(scores) {
+    let type = '';
+    type += scores.EI.left >= 50 ? 'E' : 'I';
+    type += scores.SN.left >= 50 ? 'S' : 'N';
+    type += scores.FT.left >= 50 ? 'F' : 'T';
+    type += scores.JP.left >= 50 ? 'J' : 'P';
+    return type;
+  }
+
+  /* ══════════════════════════════════════
+     Welcome
+     ══════════════════════════════════════ */
+
+  function startTest() {
+    if (Object.keys(state.answers).length > 0) {
+      showConfirm('已有答题记录，是否重新开始？', () => {
+        state = { answers: {}, currentQ: 0 };
+        saveState();
+        showPage('page-quiz');
+        renderQuestion();
+      });
+    } else {
+      state = { answers: {}, currentQ: 0 };
+      saveState();
+      showPage('page-quiz');
+      renderQuestion();
+    }
+  }
+
+  function resetTest() {
+    state = { answers: {}, currentQ: 0 };
+    localStorage.removeItem(STORAGE_KEY);
+    window.location.hash = '';
+    showPage('page-welcome');
+  }
+
+  /* ══════════════════════════════════════
+     Quiz Rendering
+     ══════════════════════════════════════ */
+
+  function getProgress() {
+    const q = QUESTIONS[state.currentQ];
+    const answered = state.currentQ + (state.answers[q.id] !== undefined ? 1 : 0);
+    return Math.round(answered / QUESTIONS.length * 100);
+  }
+
+  function updateProgressUI() {
+    const pct = getProgress();
+    const offset = CIRCUMFERENCE - (pct / 100) * CIRCUMFERENCE;
+    document.getElementById('progress-fill').style.strokeDasharray = CIRCUMFERENCE;
+    document.getElementById('progress-fill').style.strokeDashoffset = offset;
+    document.getElementById('progress-text').textContent = pct + '%';
+  }
+
+  function getSliderText(val, dim) {
+    if (val === 1) return '强烈偏好 ' + dim.left;
+    if (val === 2) return '偏向 ' + dim.left;
+    if (val === 3) return '中立';
+    if (val === 4) return '偏向 ' + dim.right;
+    return '强烈偏好 ' + dim.right;
+  }
+
+  function renderQuestion(animate, dir) {
+    const q = QUESTIONS[state.currentQ];
+    const val = state.answers[q.id];
+    const dim = DIMENSION_LABELS[q.dimension];
+
+    updateProgressUI();
+    document.getElementById('dim-badge').textContent = dim.left + ' / ' + dim.right + ' · ' + dim.name;
+
+    // Nav buttons
+    const prevBtn = document.getElementById('btn-prev');
+    if (state.currentQ === 0) {
+      prevBtn.style.display = '';
+      prevBtn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> 返回主页';
+      prevBtn.onclick = () => showPage('page-welcome');
+    } else {
+      prevBtn.style.display = '';
+      prevBtn.innerHTML = '<svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> 上一题';
+      prevBtn.onclick = () => prevQuestion();
+    }
+    const nextBtn = document.getElementById('btn-next');
+    if (state.currentQ === QUESTIONS.length - 1) {
+      nextBtn.innerHTML = '查看结果 <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+      nextBtn.className = 'btn-nav btn-submit';
+    } else {
+      nextBtn.innerHTML = '下一题 <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>';
+      nextBtn.className = 'btn-nav btn-next';
+    }
+    nextBtn.disabled = val === undefined;
+
+    // Question content
+    const el = document.getElementById('question-content');
+    el.innerHTML = `
+      <div class="q-num">QUESTION ${state.currentQ + 1} / ${QUESTIONS.length}</div>
+      <div class="q-text">
+        ${q.left}
+        <div class="q-or">— 或者 —</div>
+        ${q.right}
+      </div>
+      <div class="choices">
+        <div class="choice-card${val === 1 || val === 2 ? ' selected' : ''}" onclick="handleChoice('left')">
+          <div class="choice-label">${q.left_label}</div>
+          <div class="choice-text">${q.left}</div>
+          <div class="choice-check"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+        </div>
+        <div class="choice-card${val === 4 || val === 5 ? ' selected' : ''}" onclick="handleChoice('right')">
+          <div class="choice-label">${q.right_label}</div>
+          <div class="choice-text">${q.right}</div>
+          <div class="choice-check"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg></div>
+        </div>
+      </div>
+      <div class="slider-wrap">
+        <div class="slider-track">
+          <input type="range" min="1" max="5" value="${val || 3}" id="quiz-slider" oninput="handleSlider(this.value)"${val === undefined ? ' onpointerdown="handleSlider(3)"' : ''}>
+        </div>
+        <div class="slider-labels">
+          <span class="${val === 1 || val === 2 ? 'active' : ''}">${q.left_label}</span>
+          <span class="${val === 3 ? 'active' : ''}">中立</span>
+          <span class="${val === 4 || val === 5 ? 'active' : ''}">${q.right_label}</span>
+        </div>
+        <div class="slider-value">${val ? getSliderText(val, dim) : '拖动滑块选择倾向程度'}</div>
+      </div>
+    `;
+
+    if (animate) {
+      const enterFrom = dir === 'right' ? 'translateX(-40px)' : 'translateX(40px)';
+      el.style.transition = 'none';
+      el.style.opacity = '0';
+      el.style.transform = enterFrom;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.style.transition = 'opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+          el.style.opacity = '1';
+          el.style.transform = 'translateX(0)';
+        });
+      });
+    }
+  }
+
+  /* ══════════════════════════════════════
+     Quiz Interaction
+     ══════════════════════════════════════ */
+
+  function handleChoice(side) {
+    const q = QUESTIONS[state.currentQ];
+    const val = side === 'left' ? 1 : 5;
+    setAnswer(val);
+  }
+
+  function handleSlider(val) {
+    setAnswer(parseInt(val));
+  }
+
+  function setAnswer(val) {
+    const q = QUESTIONS[state.currentQ];
+    state.answers[q.id] = val;
+    saveState();
+
+    // Update UI
+    const cards = document.querySelectorAll('.choice-card');
+    if (cards[0]) cards[0].classList.toggle('selected', val <= 2);
+    if (cards[1]) cards[1].classList.toggle('selected', val >= 4);
+
+    const slider = document.getElementById('quiz-slider');
+    if (slider) slider.value = val;
+
+    const dim = DIMENSION_LABELS[q.dimension];
+    const labels = document.querySelectorAll('.slider-labels span');
+    if (labels[0]) labels[0].classList.toggle('active', val <= 2);
+    if (labels[1]) labels[1].classList.toggle('active', val === 3);
+    if (labels[2]) labels[2].classList.toggle('active', val >= 4);
+
+    document.querySelector('.slider-value').textContent = getSliderText(val, dim);
+
+    updateProgressUI();
+    document.getElementById('btn-next').disabled = false;
+  }
+
+  function animateTransition(dir, fn) {
+    if (isTransitioning) return;
+    isTransitioning = true;
+
+    const el = document.getElementById('question-content');
+    el.style.transition = 'opacity 0.3s cubic-bezier(0.4,0,0.2,1), transform 0.3s cubic-bezier(0.4,0,0.2,1)';
+    el.style.opacity = '0';
+    el.style.transform = dir === 'left' ? 'translateX(-40px)' : 'translateX(40px)';
+
+    setTimeout(() => {
+      fn();
+      renderQuestion(true, dir);
+      isTransitioning = false;
+    }, 300);
+  }
+
+  function prevQuestion() {
+    if (state.currentQ === 0) return;
+    animateTransition('right', () => { state.currentQ--; saveState(); });
+  }
+
+  function nextQuestion() {
+    const q = QUESTIONS[state.currentQ];
+    if (state.answers[q.id] === undefined) {
+      showModal('请先选择一个答案再继续。');
+      return;
+    }
+    if (state.currentQ === QUESTIONS.length - 1) {
+      showResult();
+      return;
+    }
+    animateTransition('left', () => { state.currentQ++; saveState(); });
+  }
+
+  /* ══════════════════════════════════════
+     Touch / Swipe
+     ══════════════════════════════════════ */
+
+  function initSwipe() {
+    const area = document.getElementById('question-area');
+    if (!area) return;
+
+    area.addEventListener('touchstart', (e) => {
+      if (isTransitioning) return;
+      const t = e.touches[0];
+      touchStartX = t.clientX;
+      touchStartY = t.clientY;
+      touchStartTime = Date.now();
+      isHorizontal = null;
+      swipeOffset = 0;
+    }, { passive: true });
+
+    area.addEventListener('touchmove', (e) => {
+      if (isTransitioning) return;
+      const t = e.touches[0];
+      const dx = t.clientX - touchStartX;
+      const dy = t.clientY - touchStartY;
+
+      if (isHorizontal === null) {
+        if (Math.abs(dx) > 8 || Math.abs(dy) > 8) {
+          isHorizontal = Math.abs(dx) > Math.abs(dy);
+        }
+        return;
+      }
+      if (!isHorizontal) return;
+
+      e.preventDefault();
+      isSwiping = true;
+
+      const resistance = 0.4;
+      const atEdge = (dx > 0 && state.currentQ === 0) || (dx < 0 && state.currentQ === QUESTIONS.length - 1);
+      swipeOffset = atEdge ? dx * resistance * 0.3 : dx * resistance;
+
+      const el = document.getElementById('question-content');
+      el.style.transition = 'none';
+      el.style.transform = `translateX(${swipeOffset}px)`;
+      el.style.opacity = 1 - Math.abs(swipeOffset) / 600;
+    });
+
+    area.addEventListener('touchend', () => {
+      if (!isSwiping) return;
+      isSwiping = false;
+      const elapsed = Date.now() - touchStartTime;
+      const velocity = Math.abs(swipeOffset) / elapsed;
+      const threshold = velocity > 0.5 ? 30 : 60;
+
+      const el = document.getElementById('question-content');
+      el.style.transition = 'opacity 0.3s, transform 0.3s';
+
+      if (swipeOffset < -threshold) {
+        if (state.currentQ < QUESTIONS.length - 1 && state.answers[QUESTIONS[state.currentQ].id] !== undefined) {
+          animateTransition('left', () => { state.currentQ++; saveState(); });
+        } else if (state.answers[QUESTIONS[state.currentQ].id] === undefined) {
+          showModal('请先选择一个答案再继续。');
+          el.style.opacity = '1'; el.style.transform = 'translateX(0)';
+        }
+      } else if (swipeOffset > threshold) {
+        if (state.currentQ > 0) {
+          animateTransition('right', () => { state.currentQ--; saveState(); });
+        } else {
+          el.style.opacity = '1'; el.style.transform = 'translateX(0)';
+        }
+      } else {
+        el.style.opacity = '1'; el.style.transform = 'translateX(0)';
+      }
+
+      swipeOffset = 0;
+    }, { passive: true });
+  }
+
+  /* ══════════════════════════════════════
+     Result
+     ══════════════════════════════════════ */
+
+  function showResult() {
+    const scores = calculateScores(state.answers);
+    const type = getType(scores);
+    renderResult(type, scores);
+    showPage('page-result');
+  }
+
+  function renderResult(type, scores) {
+    currentResultType = type;
+    currentResultScores = scores;
+
+    // Type display
+    document.getElementById('result-type').textContent = type;
+    document.getElementById('result-type-name').textContent = TYPE_NAMES[type] || '';
+
+    // Poster dimensions
+    const posterDims = document.getElementById('poster-dims');
+    posterDims.innerHTML = '';
+    Object.entries(DIMENSION_LABELS).forEach(([dim, labels]) => {
+      const s = scores[dim] || { left: 50, right: 50 };
+      posterDims.innerHTML += `
+        <div class="poster-dim">
+          <span class="poster-dim-left${s.left >= 50 ? ' active' : ''}">${labels.left}</span>
+          <div class="poster-bar"><div class="poster-bar-fill" style="width:${s.left}%"></div></div>
+          <span class="poster-dim-right${s.right > 50 ? ' active' : ''}">${labels.right}</span>
+          <span class="poster-dim-pct">${Math.max(s.left, s.right)}%</span>
+        </div>`;
+    });
+
+    // Trait tags
+    const traits = TYPE_TRAITS[type] || [];
+    document.getElementById('trait-tags').innerHTML = traits.map(t =>
+      `<span class="trait-tag">${t}</span>`
+    ).join('');
+
+    // Dimension bars
+    const bars = document.getElementById('dimension-bars');
+    bars.innerHTML = '';
+    Object.entries(DIMENSION_LABELS).forEach(([dim, labels], i) => {
+      const s = scores[dim] || { left: 50, right: 50 };
+      const dominant = s.left >= 50 ? 'left' : 'right';
+      bars.innerHTML += `
+        <div class="dim-row" style="animation: barEnter 0.5s ease-out both; animation-delay: ${i * 150}ms">
+          <div class="dim-header">
+            <div>
+              <span class="letter ${dominant === 'left' ? 'active' : 'inactive'}">${labels.left}</span>
+              <span class="vs">vs</span>
+              <span class="letter ${dominant === 'right' ? 'active' : 'inactive'}">${labels.right}</span>
+            </div>
+            <div class="dim-name">${labels.name}</div>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:0%" data-width="${s.left}%"></div>
+          </div>
+          <div class="pct-row">
+            <span class="pct-left">${s.left}% ${labels.leftDesc}</span>
+            <span class="pct-right">${s.right}% ${labels.rightDesc}</span>
+          </div>
+        </div>`;
+    });
+
+    // Animate bars
+    setTimeout(() => {
+      document.querySelectorAll('.bar-fill').forEach((bar, i) => {
+        setTimeout(() => { bar.style.width = bar.dataset.width; }, i * 150);
+      });
+    }, 300);
+
+    // Tabs
+    activeTab = 'strengths';
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector('.tab-btn[data-tab="strengths"]').classList.add('active');
+    renderTab('strengths');
+
+    // Description
+    document.getElementById('result-description').textContent = TYPE_DESCRIPTIONS[type] || '';
+  }
+
+  function switchTab(tab) {
+    if (tab === activeTab) return;
+    activeTab = tab;
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === tab);
+    });
+    const container = document.getElementById('tab-content');
+    container.classList.add('tab-exit');
+    setTimeout(() => {
+      renderTab(tab);
+      container.classList.remove('tab-exit');
+      container.classList.add('tab-enter');
+      setTimeout(() => container.classList.remove('tab-enter'), 250);
+    }, 200);
+  }
+
+  function renderTab(tab) {
+    const container = document.getElementById('tab-content');
+    const type = currentResultType;
+
+    if (tab === 'strengths') {
+      container.innerHTML = `
+        <div class="glass-card tab-card">
+          <div class="section-title">核心优势</div>
+          <p class="tab-text">${TYPE_STRENGTHS[type] || ''}</p>
+        </div>`;
+    } else if (tab === 'growth') {
+      container.innerHTML = `
+        <div class="glass-card tab-card">
+          <div class="section-title">成长方向</div>
+          <p class="tab-text">${TYPE_GROWTH[type] || ''}</p>
+        </div>`;
+    } else {
+      const compatible = TYPE_COMPATIBLE[type] || [];
+      container.innerHTML = `
+        <div class="glass-card tab-card">
+          <div class="section-title">默契搭档</div>
+          <div class="compatible-list">
+            ${compatible.map(c => `
+              <div class="compatible-item">
+                <span class="compatible-type">${c}</span>
+                <span class="compatible-name">${TYPE_NAMES[c] || ''}</span>
+              </div>`).join('')}
+          </div>
+        </div>`;
+    }
+  }
+
+  /* ══════════════════════════════════════
+     Share
+     ══════════════════════════════════════ */
+
+  function copyShareLink() {
+    const scores = calculateScores(state.answers);
+    const type = getType(scores);
+    const payload = btoa(unescape(encodeURIComponent(JSON.stringify({ type, scores }))));
+    const url = window.location.origin + window.location.pathname + '#r=' + encodeURIComponent(payload);
+    navigator.clipboard.writeText(url).then(() => {
+      showToast('链接已复制到剪贴板！');
+    }).catch(() => {
+      showToast('复制失败，请手动复制');
+    });
+  }
+
+  function decodeShareLink() {
+    const hash = window.location.hash;
+    if (!hash.startsWith('#r=')) return null;
+    try {
+      const json = decodeURIComponent(escape(atob(decodeURIComponent(hash.slice(3)))));
+      const data = JSON.parse(json);
+      if (!data.type || typeof data.type !== 'string' || data.type.length !== 4) return null;
+      if (!data.scores || typeof data.scores !== 'object') return null;
+      for (const dim of ['EI','SN','FT','JP']) {
+        const s = data.scores[dim];
+        if (!s || typeof s.left !== 'number' || typeof s.right !== 'number') return null;
+        if (s.left < 0 || s.left > 100 || s.right < 0 || s.right > 100) return null;
+      }
+      return data;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  /* ══════════════════════════════════════
+     Init
+     ══════════════════════════════════════ */
+
+  function init() {
+    loadState();
+
+    const shared = decodeShareLink();
+    if (shared) {
+      renderResult(shared.type, shared.scores);
+      showPage('page-result');
+      return;
+    }
+
+    showPage('page-welcome');
+  }
+
+  init();
+  initSwipe();
+  </script>
+</body>
+</html>

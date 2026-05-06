@@ -1,0 +1,290 @@
+[
+  {
+    "id": 1,
+    "dimension": "EI",
+    "direction": "positive",
+    "left": "在聚会上，我通常主动和很多人打招呼",
+    "right": "我更喜欢找一两个熟人静静聊天",
+    "left_label": "E",
+    "right_label": "I"
+  },
+  {
+    "id": 2,
+    "dimension": "EI",
+    "direction": "reverse",
+    "left": "面对陌生人群，我倾向于保持沉默观察",
+    "right": "我很容易自然地加入谈话",
+    "left_label": "I",
+    "right_label": "E"
+  },
+  {
+    "id": 3,
+    "dimension": "EI",
+    "direction": "positive",
+    "left": "我喜欢成为大家注意的中心",
+    "right": "我更愿意在角落里做个旁观者",
+    "left_label": "E",
+    "right_label": "I"
+  },
+  {
+    "id": 4,
+    "dimension": "EI",
+    "direction": "reverse",
+    "left": "独处时我更能充电放松",
+    "right": "和朋友们在一起让我感到活力充沛",
+    "left_label": "I",
+    "right_label": "E"
+  },
+  {
+    "id": 5,
+    "dimension": "EI",
+    "direction": "positive",
+    "left": "我倾向于外向开朗，容易接近",
+    "right": "我比较内敛，有自己的私人空间",
+    "left_label": "E",
+    "right_label": "I"
+  },
+  {
+    "id": 6,
+    "dimension": "EI",
+    "direction": "reverse",
+    "left": "我在社交场合常常感到拘谨不自在",
+    "right": "我在各种场合都能轻松自如地表现自己",
+    "left_label": "I",
+    "right_label": "E"
+  },
+  {
+    "id": 7,
+    "dimension": "EI",
+    "direction": "positive",
+    "left": "我乐意主动认识新朋友",
+    "right": "我更喜欢和熟悉的老朋友相处",
+    "left_label": "E",
+    "right_label": "I"
+  },
+  {
+    "id": 8,
+    "dimension": "EI",
+    "direction": "reverse",
+    "left": "我通常等别人先开口找我",
+    "right": "我经常主动开启话题",
+    "left_label": "I",
+    "right_label": "E"
+  },
+  {
+    "id": 9,
+    "dimension": "SN",
+    "direction": "positive",
+    "left": "我更关注眼前的具体细节",
+    "right": "我更倾向于看到整体的可能性",
+    "left_label": "S",
+    "right_label": "N"
+  },
+  {
+    "id": 10,
+    "dimension": "SN",
+    "direction": "reverse",
+    "left": "我喜欢畅想未来的各种可能",
+    "right": "我更注重当下的实际经验",
+    "left_label": "N",
+    "right_label": "S"
+  },
+  {
+    "id": 11,
+    "dimension": "SN",
+    "direction": "positive",
+    "left": "我信任经过验证的可靠方法",
+    "right": "我喜欢探索新颖独特的解决方案",
+    "left_label": "S",
+    "right_label": "N"
+  },
+  {
+    "id": 12,
+    "dimension": "SN",
+    "direction": "reverse",
+    "left": "我常被自己的想法和联想带走",
+    "right": "我倾向于脚踏实地处理眼前事务",
+    "left_label": "N",
+    "right_label": "S"
+  },
+  {
+    "id": 13,
+    "dimension": "SN",
+    "direction": "positive",
+    "left": "我重视实际经验和确凿事实",
+    "right": "我对理论和抽象概念更感兴趣",
+    "left_label": "S",
+    "right_label": "N"
+  },
+  {
+    "id": 14,
+    "dimension": "SN",
+    "direction": "reverse",
+    "left": "我更关注事物背后的意义和关联",
+    "right": "我专注于事情本身的具体情况",
+    "left_label": "N",
+    "right_label": "S"
+  },
+  {
+    "id": 15,
+    "dimension": "SN",
+    "direction": "positive",
+    "left": "我做事讲究务实和可行性",
+    "right": "我更看重创意和灵感",
+    "left_label": "S",
+    "right_label": "N"
+  },
+  {
+    "id": 16,
+    "dimension": "SN",
+    "direction": "reverse",
+    "left": "我的思维跳跃，喜欢联想",
+    "right": "我观察敏锐，注重细节",
+    "left_label": "N",
+    "right_label": "S"
+  },
+  {
+    "id": 17,
+    "dimension": "FT",
+    "direction": "positive",
+    "left": "做决定时，我更看重人际和谐",
+    "right": "做决定时，我更注重逻辑和公正",
+    "left_label": "F",
+    "right_label": "T"
+  },
+  {
+    "id": 18,
+    "dimension": "FT",
+    "direction": "reverse",
+    "left": "我认为客观真理比个人感受更重要",
+    "right": "我会优先考虑他人的情感和处境",
+    "left_label": "T",
+    "right_label": "F"
+  },
+  {
+    "id": 19,
+    "dimension": "FT",
+    "direction": "positive",
+    "left": "我富有同情心，容易感同身受",
+    "right": "我倾向于理性分析，保持客观",
+    "left_label": "F",
+    "right_label": "T"
+  },
+  {
+    "id": 20,
+    "dimension": "FT",
+    "direction": "reverse",
+    "left": "我习惯用批判性思维审视问题",
+    "right": "我倾向于理解和包容不同的观点",
+    "left_label": "T",
+    "right_label": "F"
+  },
+  {
+    "id": 21,
+    "dimension": "FT",
+    "direction": "positive",
+    "left": "我重视合作与相互支持",
+    "right": "我重视效率和目标达成",
+    "left_label": "F",
+    "right_label": "T"
+  },
+  {
+    "id": 22,
+    "dimension": "FT",
+    "direction": "reverse",
+    "left": "我觉得辩论和争论很有价值",
+    "right": "我倾向于避免冲突，维护和睦",
+    "left_label": "T",
+    "right_label": "F"
+  },
+  {
+    "id": 23,
+    "dimension": "FT",
+    "direction": "positive",
+    "left": "我依据个人价值观和良心行事",
+    "right": "我依据理性分析和事实依据行事",
+    "left_label": "F",
+    "right_label": "T"
+  },
+  {
+    "id": 24,
+    "dimension": "FT",
+    "direction": "reverse",
+    "left": "我做决定时尽量不受情绪干扰",
+    "right": "我会考虑决定对他人的情感影响",
+    "left_label": "T",
+    "right_label": "F"
+  },
+  {
+    "id": 25,
+    "dimension": "JP",
+    "direction": "positive",
+    "left": "我喜欢提前制定计划并按部就班",
+    "right": "我更喜欢随机应变，灵活处理",
+    "left_label": "J",
+    "right_label": "P"
+  },
+  {
+    "id": 26,
+    "dimension": "JP",
+    "direction": "reverse",
+    "left": "我喜欢保持开放的选择空间",
+    "right": "我喜欢把事情确定下来，有条有理",
+    "left_label": "P",
+    "right_label": "J"
+  },
+  {
+    "id": 27,
+    "dimension": "JP",
+    "direction": "positive",
+    "left": "我倾向于尽快完成任务",
+    "right": "我倾向于在截止日期前才动手",
+    "left_label": "J",
+    "right_label": "P"
+  },
+  {
+    "id": 28,
+    "dimension": "JP",
+    "direction": "reverse",
+    "left": "我适应性强，不喜欢被条条框框束缚",
+    "right": "我重视结构和清晰的安排",
+    "left_label": "P",
+    "right_label": "J"
+  },
+  {
+    "id": 29,
+    "dimension": "JP",
+    "direction": "positive",
+    "left": "我习惯列清单、做日程表",
+    "right": "我习惯走一步看一步",
+    "left_label": "J",
+    "right_label": "P"
+  },
+  {
+    "id": 30,
+    "dimension": "JP",
+    "direction": "reverse",
+    "left": "我对时间比较宽松随性",
+    "right": "我很守时，讨厌拖延",
+    "left_label": "P",
+    "right_label": "J"
+  },
+  {
+    "id": 31,
+    "dimension": "JP",
+    "direction": "positive",
+    "left": "我喜欢事情有明确的结论",
+    "right": "我喜欢保留探索的余地",
+    "left_label": "J",
+    "right_label": "P"
+  },
+  {
+    "id": 32,
+    "dimension": "JP",
+    "direction": "reverse",
+    "left": "我享受过程中的惊喜和变化",
+    "right": "我享受完成目标后的满足感",
+    "left_label": "P",
+    "right_label": "J"
+  }
+]
