@@ -685,6 +685,7 @@
 
     area.addEventListener('touchstart', (e) => {
       if (isTransitioning) return;
+      if (e.target.tagName === 'INPUT' && e.target.type === 'range') return;
       const t = e.touches[0];
       touchStartX = t.clientX;
       touchStartY = t.clientY;
