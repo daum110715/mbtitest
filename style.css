@@ -727,6 +727,11 @@ button {
   position: relative;
   z-index: 2;
   touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.slider-track input[type="range"]:focus {
+  outline: none;
 }
 
 .slider-track input[type="range"]::-webkit-slider-runnable-track {
